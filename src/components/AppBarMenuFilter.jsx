@@ -58,9 +58,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar({ filterOptionsList }) {
+export default function PrimarySearchAppBar({ rowData, columnDefs, handleInputSearch }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  //const [searchInput, setSearchInput] = React.useState("");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -81,6 +82,22 @@ export default function PrimarySearchAppBar({ filterOptionsList }) {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleSearchTextInput = (event) => {
+    let searchText = event.target.value.toLowerCase();
+    let searchResult = rowData.filter((element) => {
+      if(searchText.length > 0) {
+        return element.patientName.toLowerCase().includes(searchText);
+      } 
+      return element;
+    });
+
+    handleInputSearch(searchResult);
+  }
+
+  const handleFilterInputChange = (event) => {
+    handleInputSearch(event);
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -167,12 +184,16 @@ export default function PrimarySearchAppBar({ filterOptionsList }) {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onChange={handleSearchTextInput}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {filterOptionsList.map((filter) => {
-                return <FilterOption filterName={filter} />
+            {columnDefs.map((filter, index) => {
+                if(filter.hasOwnProperty('filterType')) {
+                  return <FilterOption key={index} filterName={filter} rowData={rowData} columnDefs={columnDefs} handleFilterInputChange={handleFilterInputChange} />
+                }
+                return "";
             })}
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -187,7 +208,7 @@ export default function PrimarySearchAppBar({ filterOptionsList }) {
               <FilterListIcon />
             </IconButton>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }} style={{ padding: '10px 10px 10px 0', marginLeft: '-15px' }}>
-                <FilterOption filterName={{ headerName: 'All filters' }} filterOptionsList={filterOptionsList} />
+                <FilterOption key={0} filterName={{ headerName: 'All filters' }} rowData={rowData} columnDefs={columnDefs} handleFilterInputChange={handleFilterInputChange} />
             </Box>
           </Box>
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

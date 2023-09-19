@@ -3,11 +3,10 @@ import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import EditIcon from '@mui/icons-material/Edit';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const StyledMenu = styled((props) => (
@@ -51,7 +50,7 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-export default function CustomizedMenus({ filterName, filterOptionsList=[] }) {
+export default function FilterOption({ filterName, rowData=[], columnDefs=[], handleFilterInputChange }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -59,6 +58,61 @@ export default function CustomizedMenus({ filterName, filterOptionsList=[] }) {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDropdownListData = () => {
+    let newRowData = rowData.map((row) => {
+      return row[filterName.field];
+    });
+
+    return [...new Set(newRowData)];
+  };
+
+  const createStateForCheckBoxes = (numberOfCheckBoxes) => {
+    if(numberOfCheckBoxes > 0) {
+      let checkBoxesResult = [];
+      for(let i = 0; i < numberOfCheckBoxes; i++){
+        checkBoxesResult.push({
+          ['checkbox'+i]: true
+        });
+      }
+      return checkBoxesResult;
+    } else {
+      return [];
+    }
+  };
+
+  const filterDropdownData = filterName.hasOwnProperty('field') && filterName.field !== undefined ? handleDropdownListData() : "";
+  const [state, setState] = React.useState(filterDropdownData.length === 0 ? [] : createStateForCheckBoxes(filterDropdownData.length));
+
+  const handleCheck = (indexOfCheckbox, isChecked) => {
+    let updatedState = [...state];
+    updatedState[indexOfCheckbox]['checkbox'+indexOfCheckbox] = !isChecked;
+
+    let filterByText = filterDropdownData.filter((filterOption, index) => {
+      if(updatedState[index]['checkbox'+index]) {
+        return filterOption;
+      }
+      return null;
+    });
+
+    let filterResult = rowData.filter((element) => {
+      let res = "";
+      for(let i = 0; i < filterByText.length; i++) {
+        if(element[filterName.field].toLowerCase() === filterByText[i].toLowerCase()) {
+          res = element;
+        }
+      }
+      return res;
+    });
+    
+    handleFilterInputChange(filterResult);
+    setState(updatedState);
+  };
+
+  const handleReset = () => {
+    handleFilterInputChange(rowData);
+    setState(createStateForCheckBoxes(filterDropdownData.length));
   };
 
   return (
@@ -76,7 +130,7 @@ export default function CustomizedMenus({ filterName, filterOptionsList=[] }) {
       >
         {filterName.headerName}
       </Button>
-      {filterOptionsList.length > 0 && filterName.headerName === 'All filters' ?
+      {columnDefs.length > 0 && filterName.headerName === 'All filters' ?
         <StyledMenu
           id="demo-customized-menu"
           MenuListProps={{
@@ -86,10 +140,13 @@ export default function CustomizedMenus({ filterName, filterOptionsList=[] }) {
           open={open}
           onClose={handleClose}
         >
-          {filterOptionsList.map((option) => {
-            return <MenuItem onClick={handleClose} disableRipple>
-              {option.headerName}
-            </MenuItem>
+          {columnDefs.map((option, index) => {
+            if(option.hasOwnProperty('filterType')) {
+              return <MenuItem key={index} onClick={handleClose} disableRipple>
+                        {option.headerName}
+                      </MenuItem>
+            }
+            return "";
           })}
         </StyledMenu>
       :
@@ -102,22 +159,40 @@ export default function CustomizedMenus({ filterName, filterOptionsList=[] }) {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose} disableRipple>
-            <EditIcon />
-            Edit
-          </MenuItem>
-          <MenuItem onClick={handleClose} disableRipple>
-            <FileCopyIcon />
-            Duplicate
+          <MenuItem
+            key={0}
+            disabled={true}
+          >
+            {filterName.headerName}
           </MenuItem>
           <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={handleClose} disableRipple>
-            <ArchiveIcon />
-            Archive
-          </MenuItem>
-          <MenuItem onClick={handleClose} disableRipple>
-            <MoreHorizIcon />
-            More
+          {filterDropdownData.map((columnFilterName, index) => {
+            return <MenuItem key={index+1} disableRipple>
+              <FormGroup>
+                <FormControlLabel 
+                  control={
+                    <Checkbox 
+                      style={{
+                        transform: "scale(1.5)",
+                        padding: '0 0 0 10px'
+                      }}
+                      checked={state[index]['checkbox'+index]}
+                      onChange={() => handleCheck(index, state[index]['checkbox'+index])}
+                    />} 
+                  label={columnFilterName} />
+              </FormGroup>
+            </MenuItem>
+          })}
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem
+            key={filterDropdownData.length+2}
+            sx={{
+              '&:hover': {
+                background:'none'
+              },
+            }}
+          >
+            <Button onClick={handleReset}>Reset</Button>
           </MenuItem>
         </StyledMenu>
       }

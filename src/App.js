@@ -49,29 +49,32 @@ function App() {
     ]
   );
 
+  const dataGrid = [
+    { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime": "2020-05-30T10:01:00" , "status": "Ready for Provider 9:26 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Catrine", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"2015-04-21T16:30:00" , "status": "", "wait": "" },
+    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"2010-02-19T12:02:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
+    { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "In Re-schedule Queue", "wait": "" },
+    { "patientName": "Pandy, Peggy", "resource": "Mc Coy Henry", "apptType": "CQM New", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
+    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
+    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" }
+  ];
+
   const [columnDefs, setColumnDefs] = useState(
     [
       { headerName: 'PATIENT NAME', field: 'patientName', sortable: true, headerCheckboxSelection: true, checkboxSelection: true, showDisabledCheckboxes: true, minWidth: 250},
-      { headerName: 'RESOURCE', field: 'resource', sortable: true, minWidth: 250 },
-      { headerName: 'APPT TYPE', field: 'apptType', sortable: true, minWidth: 150 },
+      { headerName: 'RESOURCE', field: 'resource', sortable: true, minWidth: 250, filterType: "MultiSelect" },
+      { headerName: 'APPT TYPE', field: 'apptType', sortable: true, minWidth: 150, filterType: "MultiSelect" },
       { headerName: 'APPT TIME', field: 'apptTime', sortable: true, minWidth: 150, valueFormatter: dateFormatter},
       { headerName: 'STATUS', field: 'status', sortable: true, minWidth: 300 },
       { headerName: 'WAIT', field: 'wait', sortable: true, minWidth: 150 }
     ]
   );
 
-  const [filterOptionsList, setFilterOptionsList] = useState([
-    { headerName: 'Dates' },
-    { headerName: 'Status' },
-    { headerName: 'People' },
-    { headerName: 'Locations' },
-    { headerName: 'Rooms' },
-    { headerName: 'Views' }
-  ]);
-
   const [rowDataStr, setRowDataStr] = useState(JSON.stringify(rowData, undefined, 2));
   const [columnDefsStr, setColumnDefStr] = useState(JSON.stringify(columnDefs, undefined, 2));
-  const [filterOptionsListStr, setFilterOptionsListStr] = useState(JSON.stringify(filterOptionsList, undefined, 2));
 
   const editRowData = e => {
     let rowDataText =  e.target.value;
@@ -85,17 +88,14 @@ function App() {
     setColumnDefs(JSON.parse(columnDefsText));
   }
 
-  const editFilterData = e => {
-    let filterDataText =  e.target.value;
-    setFilterOptionsListStr(filterDataText);
-    setFilterOptionsList(JSON.parse(filterDataText))
-  };
-
   const changeScrollMode = e => {
     let scrollModeSelected = e.target.value;
     setScrollMode(scrollModeSelected);
   };
 
+  const handleInputSearch = (newData) => {
+    setRowData(newData);
+  };
 
   // default column configuration
   const defaultColDef = useMemo(() => {
@@ -153,9 +153,8 @@ function App() {
       <div className='textBox'>
         <textarea value={rowDataStr} onChange={editRowData} rows="30" cols="50"></textarea>
         <textarea value={columnDefsStr} onChange={editColumnDefs} rows="30" cols="50"></textarea>
-        <textarea value={filterOptionsListStr} onChange={editFilterData} rows="30" cols="50"></textarea>
       </div>
-      <AppBarMenuFilter filterOptionsList={filterOptionsList} />
+      <AppBarMenuFilter rowData={dataGrid} columnDefs={columnDefs} handleInputSearch={handleInputSearch} />
       <div id="grid-wrapper" className={scrollMode}  >
       <AgGridReact
         className='ag-theme-alpine'
