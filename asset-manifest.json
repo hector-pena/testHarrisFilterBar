@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/testHarrisFilterBar/static/css/main.861bf6a1.css",
+    "main.js": "/testHarrisFilterBar/static/js/main.9d70bc12.js",
+    "static/js/787.06f65e07.chunk.js": "/testHarrisFilterBar/static/js/787.06f65e07.chunk.js",
+    "index.html": "/testHarrisFilterBar/index.html",
+    "main.861bf6a1.css.map": "/testHarrisFilterBar/static/css/main.861bf6a1.css.map",
+    "main.9d70bc12.js.map": "/testHarrisFilterBar/static/js/main.9d70bc12.js.map",
+    "787.06f65e07.chunk.js.map": "/testHarrisFilterBar/static/js/787.06f65e07.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.861bf6a1.css",
+    "static/js/main.9d70bc12.js"
+  ]
+}
