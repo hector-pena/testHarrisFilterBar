@@ -64,12 +64,12 @@ function App() {
 
   const [columnDefs, setColumnDefs] = useState(
     [
-      { headerName: 'PATIENT NAME', field: 'patientName', sortable: true, headerCheckboxSelection: true, checkboxSelection: true, showDisabledCheckboxes: true, minWidth: 250},
-      { headerName: 'RESOURCE', field: 'resource', sortable: true, minWidth: 250, filterType: "MultiSelect" },
-      { headerName: 'APPT TYPE', field: 'apptType', sortable: true, minWidth: 150, filterType: "MultiSelect" },
-      { headerName: 'APPT TIME', field: 'apptTime', sortable: true, minWidth: 150, valueFormatter: dateFormatter},
-      { headerName: 'STATUS', field: 'status', sortable: true, minWidth: 300 },
-      { headerName: 'WAIT', field: 'wait', sortable: true, minWidth: 150 }
+      { headerName: 'PATIENT NAME', field: 'patientName', sortable: true, searchable: true, headerCheckboxSelection: true, checkboxSelection: true, showDisabledCheckboxes: true, minWidth: 250},
+      { headerName: 'RESOURCE', field: 'resource', sortable: true, searchable: true, minWidth: 250, filterType: "MultiSelect" },
+      { headerName: 'APPT TYPE', field: 'apptType', sortable: true, searchable: false, minWidth: 150, filterType: "MultiSelect" },
+      { headerName: 'APPT TIME', field: 'apptTime', sortable: true, searchable: false, minWidth: 150, valueFormatter: dateFormatter},
+      { headerName: 'STATUS', field: 'status', sortable: true, searchable: false, minWidth: 300 },
+      { headerName: 'WAIT', field: 'wait', sortable: true, searchable: false, minWidth: 150 }
     ]
   );
 

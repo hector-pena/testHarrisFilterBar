@@ -61,7 +61,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar({ rowData, columnDefs, handleInputSearch }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  //const [searchInput, setSearchInput] = React.useState("");
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -85,13 +84,27 @@ export default function PrimarySearchAppBar({ rowData, columnDefs, handleInputSe
 
   const handleSearchTextInput = (event) => {
     let searchText = event.target.value.toLowerCase();
-    let searchResult = rowData.filter((element) => {
-      if(searchText.length > 0) {
-        return element.patientName.toLowerCase().includes(searchText);
-      } 
-      return element;
+    let keysArray = [];
+    columnDefs.filter(element => {
+      if(element.searchable) {
+        keysArray.push(element.field);
+        return element.field;
+      }
+      return null;
     });
 
+    let searchResult = rowData.filter((element) => {
+      if(searchText.length > 0) {
+        if(Object.keys(element).some(key => keysArray.includes(key) ? element[key].toString().toLowerCase().includes(searchText) : false)) {
+          return element;
+        }
+      } else {
+        return element;
+      }
+
+      return null;
+    });
+    
     handleInputSearch(searchResult);
   }
 
@@ -177,16 +190,18 @@ export default function PrimarySearchAppBar({ rowData, columnDefs, handleInputSe
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" style={{ background: '#FDFDFD', color: '#2C2C2C', borderRadius: '10px' }}>
         <Toolbar>
-          <Search style={{ border: '1px solid #E9E9E9', borderRadius: '6px' }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              onChange={handleSearchTextInput}
-            />
-          </Search>
+          {columnDefs.find(element => { return element.hasOwnProperty('searchable') && element.searchable }) &&
+            <Search style={{ border: '1px solid #E9E9E9', borderRadius: '6px' }}>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search…"
+                inputProps={{ 'aria-label': 'search' }}
+                onChange={handleSearchTextInput}
+              />
+            </Search>
+          }
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {columnDefs.map((filter, index) => {
