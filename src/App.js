@@ -16,6 +16,18 @@ import { ClientSideRowModelModule } from '@ag-grid-community/client-side-row-mod
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 function App() {
+  const dataGrid = [
+    { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime": "2020-05-30T10:01:00" , "status": "Ready for Provider 9:26 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Catrine", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"2015-04-21T16:30:00" , "status": "", "wait": "" },
+    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"2010-02-19T12:02:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
+    { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "In Re-schedule Queue", "wait": "" },
+    { "patientName": "Pandy, Peggy", "resource": "Mc Coy Henry", "apptType": "CQM New", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
+    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
+    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
+    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" }
+  ];
 
   const gridRef = useRef();
   const [scrollMode, setScrollMode] = useState('vertical');
@@ -34,34 +46,7 @@ function App() {
     return ( day +'/' +month +'/' +year +' ' +hour +':' +min +' ' +amPM);
   };
 
-  const [rowData, setRowData] = useState(
-    [
-      { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime": "2020-05-30T10:01:00" , "status": "Ready for Provider 9:26 AM", "wait": "00:05" },
-      { "patientName": "Murphy, Catrine", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"2015-04-21T16:30:00" , "status": "", "wait": "" },
-      { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"2010-02-19T12:02:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
-      { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
-      { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "In Re-schedule Queue", "wait": "" },
-      { "patientName": "Pandy, Peggy", "resource": "Mc Coy Henry", "apptType": "CQM New", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
-      { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
-      { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
-      { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
-      { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" }
-    ]
-  );
-
-  const dataGrid = [
-    { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime": "2020-05-30T10:01:00" , "status": "Ready for Provider 9:26 AM", "wait": "00:05" },
-    { "patientName": "Murphy, Catrine", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"2015-04-21T16:30:00" , "status": "", "wait": "" },
-    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"2010-02-19T12:02:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
-    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
-    { "patientName": "Francis, Henry", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "In Re-schedule Queue", "wait": "" },
-    { "patientName": "Pandy, Peggy", "resource": "Mc Coy Henry", "apptType": "CQM New", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
-    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
-    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" },
-    { "patientName": "Murphy, Alicia", "resource": "Anna Bates", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "Checked in 9:57 AM", "wait": "00:05" },
-    { "patientName": "Murphy, Alicia", "resource": "Mc Coy Henry", "apptType": "Sick Visit", "apptTime":"1995-10-04T03:27:00" , "status": "", "wait": "" }
-  ];
-
+  const [rowData, setRowData] = useState(dataGrid);
   const [columnDefs, setColumnDefs] = useState(
     [
       { headerName: 'PATIENT NAME', field: 'patientName', sortable: true, searchable: true, headerCheckboxSelection: true, checkboxSelection: true, showDisabledCheckboxes: true, minWidth: 250},
@@ -72,9 +57,9 @@ function App() {
       { headerName: 'WAIT', field: 'wait', sortable: true, searchable: false, minWidth: 150 }
     ]
   );
-
   const [rowDataStr, setRowDataStr] = useState(JSON.stringify(rowData, undefined, 2));
   const [columnDefsStr, setColumnDefStr] = useState(JSON.stringify(columnDefs, undefined, 2));
+  const [filteredData, setFilteredData] = useState(dataGrid);
 
   const editRowData = e => {
     let rowDataText =  e.target.value;
@@ -95,6 +80,16 @@ function App() {
 
   const handleInputSearch = (newData) => {
     setRowData(newData);
+  };
+
+  const handleInputFilter = (newData) => {
+    if(newData.length === dataGrid.length){
+      setFilteredData(dataGrid);
+      setRowData(dataGrid);
+    } else {
+      setFilteredData(newData);
+      setRowData(newData);
+    }
   };
 
   // default column configuration
@@ -154,12 +149,12 @@ function App() {
         <textarea value={rowDataStr} onChange={editRowData} rows="30" cols="50"></textarea>
         <textarea value={columnDefsStr} onChange={editColumnDefs} rows="30" cols="50"></textarea>
       </div>
-      <AppBarMenuFilter rowData={dataGrid} columnDefs={columnDefs} handleInputSearch={handleInputSearch} />
+      <AppBarMenuFilter rowData={dataGrid} filteredData={filteredData} columnDefs={columnDefs} handleInputSearch={handleInputSearch} handleInputFilter={handleInputFilter} />
       <div id="grid-wrapper" className={scrollMode}  >
       <AgGridReact
         className='ag-theme-alpine'
         ref={gridRef}
-        rowData={rowData}
+        rowData={filteredData.length > rowData.length ? rowData : filteredData}
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         rowSelection='multiple'

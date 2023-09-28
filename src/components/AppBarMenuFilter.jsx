@@ -58,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function PrimarySearchAppBar({ rowData, columnDefs, handleInputSearch }) {
+export default function PrimarySearchAppBar({ rowData, filteredData,  columnDefs, handleInputSearch, handleInputFilter }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -93,7 +93,7 @@ export default function PrimarySearchAppBar({ rowData, columnDefs, handleInputSe
       return null;
     });
 
-    let searchResult = rowData.filter((element) => {
+    let searchResult = filteredData.filter((element) => {
       if(searchText.length > 0) {
         if(Object.keys(element).some(key => keysArray.includes(key) ? element[key].toString().toLowerCase().includes(searchText) : false)) {
           return element;
@@ -109,7 +109,7 @@ export default function PrimarySearchAppBar({ rowData, columnDefs, handleInputSe
   }
 
   const handleFilterInputChange = (event) => {
-    handleInputSearch(event);
+    handleInputFilter(event);
   }
 
   const menuId = 'primary-search-account-menu';
